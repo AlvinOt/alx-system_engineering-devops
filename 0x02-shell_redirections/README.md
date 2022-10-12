@@ -1,1 +1,1 @@
-task 0 hello world
+shelll redirections and filters
