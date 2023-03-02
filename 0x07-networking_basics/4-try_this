@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Display only listening sockets with PID and program name
+netstat -lnp | grep LISTEN
