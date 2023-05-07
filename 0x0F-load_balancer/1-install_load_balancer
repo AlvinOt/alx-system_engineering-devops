@@ -12,12 +12,10 @@ frontend  alvin-frontend
         default_backend alvin-backend
 backend alvin-backend
         balance roundrobin
-        server 172583-web-01 100.26.167.14 check
-        server 172583-web-02 54.144.136.37 check
+        server 172583-web-01 100.26.220.29 check
+        server 172583-web-02 52.23.212.47 check
 "
 echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
-
-# enable haproxy to be started by init script
 
 echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 

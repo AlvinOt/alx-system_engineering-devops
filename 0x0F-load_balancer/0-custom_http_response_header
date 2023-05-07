@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # doubling the number of servers
-sudo apt-get update
+sudo apt-get -y update
 sudo apt-get -y install nginx
 
 sudo ufw allow 'Nginx HTTP'
@@ -9,11 +9,11 @@ sudo mkdir -p /var/www/html
 
 sudo chmod -R 755 /var/www
 
-echo 'Hello World!' | sudo tee /var/www/html/index.html
+echo 'Hello World!' |sudo tee  /var/www/html/index.html
 
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+echo "Ceci n'est pas une page" |sudo tee /var/www/html/404.html
 
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com permanent;"
+string_for_replacement="server_name _;\n\tadd_header X-Served-By \$hostname;\n\trewrite ^\/redirect_me https:\/\/www.blog.ehoneahobed.com permanent;"
 sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
 string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
