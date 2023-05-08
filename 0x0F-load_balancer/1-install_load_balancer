@@ -1,24 +1,39 @@
 #!/usr/bin/env bash
 #load balancer installation
-
 sudo apt-get update -y
 sudo apt-get install -y haproxy
 
-sudo sh -c 'echo "ENABLED=1" >> /etc/default/haproxy'
+echo "ENABLED=1" >> /etc/default/haproxy
+mv /etc/haproxy/haproxy.cfg{,.original}
+touch /etc/haproxy/haproxy.cfg
 
-sudo sh -c 'cat << EOF >> /etc/haproxy/haproxy.cfg
-frontend hbnbclone
-    bind *:80
-    option forwardfor
-    default_backend alvinservers
+printf %s "global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
 
-backend alvinservers
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+
+listen hbnb
+    bind 0.0.0.0:80
+    mode http
+    stats enable
+    stats uri /haproxy?stats
     balance roundrobin
-    server 172583-web-01 100.26.220.29:80 check
-    server 172583-web-02 52.23.212.47:80 check
-    option httpchk
     option httpclose
-EOF'
+    option forwardfor
+    server 172583-web-01 100.26.220.29:80  check
+    server 172583-web-02 52.23.212.47:80 check
+" >> /etc/haproxy/haproxy.cfg
 
-sudo service haproxy start
-
+service haproxy start
