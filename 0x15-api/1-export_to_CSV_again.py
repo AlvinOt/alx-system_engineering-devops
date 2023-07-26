@@ -17,7 +17,7 @@ if __name__ == '__main__':
     response = requests.get(todoUrl)
     tasks = response.json()
 
-    with open('{}.csv'.format(employeeId), 'w') as file:
+    with open('newname.csv'.format(), 'w') as file:
         for task in tasks:
             file.write('"{}","{}","{}","{}"\n'
                        .format(employeeId, username, task.get('completed'),
